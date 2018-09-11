@@ -1,9 +1,18 @@
-import Router from 'koa-router';
+import { pathRegexp } from '../utils/index';
 
-const router = new Router();
+const METHOD = ['get', 'put', 'delete', 'post'];
 
-router.get('/', (req, res) => {
-    return res.json({
-        data: '111',
-    });
+const routes = {
+    'all': []
+};
+
+const app: any = {};
+app.use = (path: string, action: Function) => {
+    routes.all.push([pathRegexp(path), action]);
+}
+
+
+METHOD.forEach(method=>{
+    routes[method] = [];
+    
 })

@@ -1,6 +1,6 @@
 import { Middleware, CookieOption } from "../interface";
 import { serialize } from "../utils";
-import url from 'url';
+import * as url from 'url';
 
 export const cookieParse: Middleware = (req, res, next) => {
     const cookie = req.headers.cookie as string;
@@ -12,9 +12,8 @@ export const cookieParse: Middleware = (req, res, next) => {
             cookies[pair[0].trim()] = pair[1].trim();
         });
     }
-
     req.cookies = cookies;
-
+    console.log('11111111')
     next();
 }
 
@@ -25,7 +24,7 @@ export const setCookie: Middleware = (req, res, next) => {
         res.setHeader('Set-Cookie', cookies + cookiesString)
     }
     res.cookie = cookie;
-
+    console.log('2222222')
     next();
 }
 
@@ -33,6 +32,7 @@ export const setCookie: Middleware = (req, res, next) => {
 export const querystring: Middleware = (req, res, next) => {
     const { query } = url.parse(req.url, true);
     req.query = query;
+    console.log('333333')
     next();
 }
 
