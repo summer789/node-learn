@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "outDir": "../build",
+        "lib": ["es6"],
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "./**/*.ts",
+        "./**/*.js"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
