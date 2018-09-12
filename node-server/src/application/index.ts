@@ -12,23 +12,14 @@ export default class Application {
     }
 
 
-
     listen(...args) {
         const server = http.createServer(this.callback());
         return server.listen(...args);
     }
 
     private callback() {
-        const fn = compose(...this.middleware);
-
-        const handleRequest = (req, res) => {
-            this.handleRequest(req, res, fn)
-        }
-        return handleRequest;
-    }
-
-    private handleRequest(req, res, next) {
-        next(req, res);
+        const fn = compose(this.middleware);
+        return fn;
     }
 
 }

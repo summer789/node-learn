@@ -37,7 +37,7 @@ export const pathRegexp = (path: string) => {
 
 export const compose = (funcs: Middleware[]) => {
     if (!Array.isArray(funcs)) {
-        throw new TypeError('中间件数组必须是数组');
+        throw new TypeError('compose 参数必须是数组');
     }
 
     for (const fn of funcs) {
@@ -46,13 +46,20 @@ export const compose = (funcs: Middleware[]) => {
         }
     }
 
-    const next = (req: Request, res: Response, ) => {
-        const fn = funcs.shift();
-        if (fn) {
-            fn(req, res, next);
-        }
-    }
 
-    return next;
+    return (req: Request, res: Response) => {
+        const url = req.url;
+        if (url === '/favicon.ico') {
+            return;
+        }
+        const middlewares = [...funcs];
+        const next = () => {
+            const fn = middlewares.shift();
+            if (fn) {
+                fn(req, res, next);
+            }
+        }
+        next();
+    };
 }
 

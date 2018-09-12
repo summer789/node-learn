@@ -14,6 +14,8 @@ export const cookieParse: Middleware = (req, res, next) => {
     }
     req.cookies = cookies;
     console.log('11111111')
+    // res.end(JSON.stringify({ code: 200, data: 'hello world' }));
+
     next();
 }
 
@@ -24,6 +26,7 @@ export const setCookie: Middleware = (req, res, next) => {
         res.setHeader('Set-Cookie', cookies + cookiesString)
     }
     res.cookie = cookie;
+
     console.log('2222222')
     next();
 }
