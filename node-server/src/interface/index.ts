@@ -24,3 +24,30 @@ export interface CookieOption {
     /** 如果设置了这个属性，那么只会在 SSH 连接时才会回传该 Cookie */
     secure: string;
 }
+
+
+export interface ActionMiddleware extends Middleware {
+    next?: Function;
+}
+
+
+export interface PathInfo {
+    regexp:RegExp,
+    paramKeys:string[],
+}
+
+export interface Route {
+    pathInfo: PathInfo;
+    actions: ActionMiddleware[];
+}
+
+export interface Routers {
+    GET: Route[],
+    PUT: Route[],
+    POST: Route[],
+    DELETE: Route[],
+}
+
+export interface RouterOptions {
+    prefix:string;
+}

@@ -1,4 +1,4 @@
-import { CookieOption, Request, Response, Middleware } from "../interface";
+import { CookieOption, Request, Response, Middleware, PathInfo } from "../interface";
 import { encode } from "punycode";
 
 export const serialize = (name: string, value: string, options: CookieOption) => {
@@ -11,28 +11,28 @@ export const serialize = (name: string, value: string, options: CookieOption) =>
     return pairs.join(';')
 }
 
-export const pathRegexp = (path: string) => {
+export const pathRegexp = (path: string): PathInfo => {
     const keys = [];
-    path = path.concat('/?')
+    path = path.trim()
+        .concat('/?')
         .replace('/\/\(\g', '(?:/')
-        .replace('/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?(\*)?/g', (_, slash, format, key, capture, optional, star) => {
+        .replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?(\*)?/g, (_, slash, format, key, capture, optional, star) => {
             keys.push(key);
             slash = slash || '';
             return ''
                 + (optional ? '' : slash)
                 + '(?:'
                 + (optional ? slash : '')
-                + (format || '') + (capture || (format && '([^/.]+?)' || '([^/+?])')) + ')'
+                + (format || '') + (capture || (format && '([^/.]+?)' || '([^/]+?)')) + ')'
                 + (optional || '')
                 + (star ? '(/*)?' : '');
         })
         .replace('/([\/.])/g', '\\$1')
         .replace('/\*/g', '(.*)');
     return {
-        keys: keys,
+        paramKeys: keys,
         regexp: new RegExp('^' + path + '$')
     };
-
 }
 
 export const compose = (funcs: Middleware[]) => {
@@ -59,7 +59,7 @@ export const compose = (funcs: Middleware[]) => {
                 fn(req, res, next);
             }
         }
-        next();
+        return next();
     };
 }
 

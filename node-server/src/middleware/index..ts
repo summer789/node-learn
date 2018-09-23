@@ -2,7 +2,7 @@ import { Middleware, CookieOption } from "../interface";
 import { serialize } from "../utils";
 import * as url from 'url';
 
-export const cookieParse: Middleware = (req, res, next) => {
+export const cookieParse: Middleware = async (req, res, next) => {
     const cookie = req.headers.cookie as string;
     const cookies = {};
     if (cookie) {
@@ -13,30 +13,37 @@ export const cookieParse: Middleware = (req, res, next) => {
         });
     }
     req.cookies = cookies;
-    console.log('11111111')
-    // res.end(JSON.stringify({ code: 200, data: 'hello world' }));
-
-    next();
+    await next();
 }
 
-export const setCookie: Middleware = (req, res, next) => {
+export const setCookie: Middleware = async (req, res, next) => {
     const cookies = res.getHeader('Set-Cookie');
     const cookie = (name: string, value: string, options: CookieOption) => {
         const cookiesString = serialize(name, value, options);
         res.setHeader('Set-Cookie', cookies + cookiesString)
     }
     res.cookie = cookie;
-
-    console.log('2222222')
-    next();
+    await next();
 }
 
 
-export const querystring: Middleware = (req, res, next) => {
+export const querystring: Middleware = async (req, res, next) => {
     const { query } = url.parse(req.url, true);
     req.query = query;
-    console.log('333333')
-    next();
+    await next();
 }
+
+
+export const pathname: Middleware = async (req, res, next) => {
+    req.pathname = url.parse(req.url).pathname;
+    await next();
+}
+
+export const method: Middleware = async (req, res, next) => {
+    req.method = req.method.toUpperCase();
+    await next();
+}
+
+
 
 
