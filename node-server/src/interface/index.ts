@@ -8,7 +8,12 @@ export interface Response extends ServerResponse {
     [propName: string]: any;
 }
 
-export type Middleware = (req: Request, res: Response, next: Function) => void;
+export type NormalMiddleware = (req: Request, res: Response, next: Function) => void;
+export type ErrorMiddleware =  (err:Error,req: Request, res: Response, next: Function) => void;
+
+export type Middleware = NormalMiddleware | ErrorMiddleware;
+
+type A = string | number;
 
 export interface CookieOption {
     /** 该 Cookie 是在当前的哪个路径下生成的，如 path=/wp-admin/  */
@@ -32,8 +37,8 @@ export interface ActionMiddleware extends Middleware {
 
 
 export interface PathInfo {
-    regexp:RegExp,
-    paramKeys:string[],
+    regexp: RegExp,
+    paramKeys: string[],
 }
 
 export interface Route {
@@ -49,5 +54,5 @@ export interface Routers {
 }
 
 export interface RouterOptions {
-    prefix:string;
+    prefix: string;
 }

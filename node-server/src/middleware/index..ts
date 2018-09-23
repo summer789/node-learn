@@ -2,6 +2,15 @@ import { Middleware, CookieOption } from "../interface";
 import { serialize } from "../utils";
 import * as url from 'url';
 
+
+export const favicon = async (req, res, next) => {
+    const url = req.url;
+    if (url === '/favicon.ico') {
+        return;
+    }
+    await next();
+}
+
 export const cookieParse: Middleware = async (req, res, next) => {
     const cookie = req.headers.cookie as string;
     const cookies = {};
@@ -42,6 +51,15 @@ export const pathname: Middleware = async (req, res, next) => {
 export const method: Middleware = async (req, res, next) => {
     req.method = req.method.toUpperCase();
     await next();
+}
+
+export const catchError: Middleware = async (err, req, res, next) => {
+    if (!err) {
+        await next();
+    }
+    console.log('111111111111111111')
+    res.statusCode == 200;
+    res.end(JSON.stringify({ code: 200, msg: '出错了' }));
 }
 
 

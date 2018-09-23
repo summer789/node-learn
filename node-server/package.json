@@ -5,11 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "ts-node ./src/index.ts"
+    "server": "nodemon --watch 'src/**/*' -e ts,tsx --exec 'ts-node' ./src/index.ts"
+  },
+  "nodemonConfig":{
+    "ignore":[
+      ".git",
+        "node_modules/**/"
+    ],
+    "delay":"1000"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "nodemon": "^1.18.4",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3"
   },

@@ -1,9 +1,10 @@
 import Application from './application';
-import { cookieParse, setCookie, querystring, method, pathname } from './middleware/index.';
+import { cookieParse, setCookie, querystring, method, pathname, favicon, catchError } from './middleware/index.';
 import router from './routes';
 
 const app = new Application();
-
+app.use(favicon);
+app.use(catchError)
 app.use(cookieParse);
 app.use(setCookie);
 app.use(querystring);

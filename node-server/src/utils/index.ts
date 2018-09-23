@@ -1,4 +1,4 @@
-import { CookieOption, Request, Response, Middleware, PathInfo } from "../interface";
+import { CookieOption, Request, Response, Middleware, PathInfo, NormalMiddleware, ErrorMiddleware } from "../interface";
 import { encode } from "punycode";
 
 export const serialize = (name: string, value: string, options: CookieOption) => {
@@ -46,17 +46,25 @@ export const compose = (funcs: Middleware[]) => {
         }
     }
 
-
     return (req: Request, res: Response) => {
-        const url = req.url;
-        if (url === '/favicon.ico') {
-            return;
-        }
-        const middlewares = [...funcs];
-        const next = () => {
-            const fn = middlewares.shift();
+        const normalMiddlewares = funcs.filter(middleware => middleware.length === 3);
+        const errorMiddleware = funcs.filter(middleware => middleware.length === 4);
+        const next = async (error?: Error) => {
+            const errorFn = errorMiddleware.shift() as ErrorMiddleware;
+            if (error && errorFn) {
+                console.log(error);
+                const errorFn = errorMiddleware.shift() as ErrorMiddleware;
+                await errorFn(error, req, res, next);
+                return;
+            }
+            const fn = normalMiddlewares.shift() as NormalMiddleware;
             if (fn) {
-                fn(req, res, next);
+                // fn(req, res, next);
+                try {
+                    fn(req, res, next);
+                } catch (error) {
+                    await next(error);
+                }
             }
         }
         return next();

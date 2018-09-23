@@ -1,5 +1,5 @@
 import { Middleware, Routers, RouterOptions } from '../../interface';
-import { pathRegexp } from '../../utils';
+import { pathRegexp, compose } from '../../utils';
 
 
 
@@ -31,24 +31,17 @@ class Router {
                 for (const item of routes) {
                     const { actions, pathInfo } = item;
                     const { regexp, paramKeys } = pathInfo;
-                    // console.log('pathInfo',pathInfo);
+                    
                     const match = regexp.exec(pathname);
                     if (match) {
                         let params = {};
-                        const middlewares = [...actions];
-                        
-                        const routerNext = () => {
-                            const fn = middlewares.shift();
-                            if (fn) {
-                                fn(req, res, routerNext);
-                            }
-                        }
+                        const routerNext = compose(actions)
                         for (let index = 0; index < paramKeys.length; index++) {
                             const value = match[index + 1];
                             if (value) {
                                 params[paramKeys[index]] = value;
                                 req.params = params;
-                                routerNext();
+                                routerNext(req,res);
                                 break;
                             }
                         }

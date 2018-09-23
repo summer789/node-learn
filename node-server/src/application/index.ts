@@ -1,4 +1,4 @@
-import { Middleware } from '../interface/index';
+import { Middleware, Request, Response } from '../interface/index';
 import { compose } from '../utils';
 import * as http from 'http';
 
@@ -21,5 +21,4 @@ export default class Application {
         const fn = compose(this.middleware);
         return fn;
     }
-
 }
