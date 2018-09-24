@@ -11,6 +11,11 @@ export const favicon = async (req, res, next) => {
     await next();
 }
 
+export const setContnetType = async (req, res, next) => {
+    res.writeHead(200,{'Content-Type':'application/json;charset=utf-8'});
+    await next();
+}
+
 export const cookieParse: Middleware = async (req, res, next) => {
     const cookie = req.headers.cookie as string;
     const cookies = {};
@@ -53,14 +58,15 @@ export const method: Middleware = async (req, res, next) => {
     await next();
 }
 
-export const catchError: Middleware = async (err, req, res, next) => {
-    if (!err) {
+export const catchError: Middleware = async (req, res, next) => {
+    try {
         await next();
+    } catch (error) {
+        res.statusCode == 200;
+        res.end(JSON.stringify({ code: 200, msg: error }));
     }
-    console.log('111111111111111111')
-    res.statusCode == 200;
-    res.end(JSON.stringify({ code: 200, msg: '出错了' }));
 }
+
 
 
 

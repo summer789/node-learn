@@ -6,16 +6,16 @@ import { pathRegexp, compose } from '../../utils';
 
 class Router {
     prefix: string = '';
-    routes: Routers ={
-        GET:[],
-        PUT:[],
-        POST:[],
-        DELETE:[],
+    routes: Routers = {
+        GET: [],
+        PUT: [],
+        POST: [],
+        DELETE: [],
     }
     constructor(option?: RouterOptions) {
-        if(option){
+        if (option) {
             this.prefix = option.prefix.replace(/\/$/, '');
-        }   
+        }
     }
 
     setPrefix(prefix: string) {
@@ -24,14 +24,12 @@ class Router {
 
     routers(): Middleware {
         return async (req, res, next) => {
-    
             const { method, pathname } = req;
             if (this.routes.hasOwnProperty(method)) {
                 const routes = this.routes[method as (keyof Routers)];
                 for (const item of routes) {
                     const { actions, pathInfo } = item;
                     const { regexp, paramKeys } = pathInfo;
-                    
                     const match = regexp.exec(pathname);
                     if (match) {
                         let params = {};
@@ -41,10 +39,17 @@ class Router {
                             if (value) {
                                 params[paramKeys[index]] = value;
                                 req.params = params;
-                                routerNext(req,res);
+                                try {
+                                    await routerNext(req, res);
+                                } catch (error) {
+                                    return Promise.reject(error)
+                                }
                                 break;
                             }
                         }
+                    }else{
+                        res.statusCode = 404;
+                        res.end();
                     }
                 }
             }

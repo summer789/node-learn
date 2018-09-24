@@ -8,10 +8,10 @@ export interface Response extends ServerResponse {
     [propName: string]: any;
 }
 
-export type NormalMiddleware = (req: Request, res: Response, next: Function) => void;
-export type ErrorMiddleware =  (err:Error,req: Request, res: Response, next: Function) => void;
+// export type NormalMiddleware = (req: Request, res: Response, next: Function) => Promise<any>;
+// export type ErrorMiddleware =  (err:Error,req: Request, res: Response, next: Function) => void;
 
-export type Middleware = NormalMiddleware | ErrorMiddleware;
+export type Middleware = (req: Request, res: Response, next: Function) => Promise<any>;
 
 type A = string | number;
 

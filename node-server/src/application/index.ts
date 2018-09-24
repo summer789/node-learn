@@ -17,8 +17,26 @@ export default class Application {
         return server.listen(...args);
     }
 
+
     private callback() {
+
+        return this.handleRequest
+    }
+
+    handleRequest = async (req: Request, res: Response) => {
         const fn = compose(this.middleware);
-        return fn;
+        try {
+            await fn(req, res);
+            return this.handleResponse(res);
+        } catch (error) {
+            res.statusCode === 200;
+            res.end(JSON.stringify({ code: 500, msg: error }));
+        }
+    }
+
+    private handleResponse(res: Response) {
+        res.statusCode = 200;
+        res.statusCode
+        res.end(JSON.stringify({ code: 200, data: res.body }));
     }
 }
