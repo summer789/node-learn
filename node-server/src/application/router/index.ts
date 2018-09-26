@@ -49,7 +49,7 @@ class Router {
                         }
                     }else{
                         res.statusCode = 404;
-                        res.end();
+                        throw('Not Found');
                     }
                 }
             }

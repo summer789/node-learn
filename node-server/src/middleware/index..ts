@@ -62,8 +62,7 @@ export const catchError: Middleware = async (req, res, next) => {
     try {
         await next();
     } catch (error) {
-        res.statusCode == 200;
-        res.end(JSON.stringify({ code: 200, msg: error }));
+        res.end(JSON.stringify({ code: res.statusCode || 500, msg: error }));
     }
 }
 

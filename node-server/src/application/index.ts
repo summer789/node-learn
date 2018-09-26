@@ -29,14 +29,11 @@ export default class Application {
             await fn(req, res);
             return this.handleResponse(res);
         } catch (error) {
-            res.statusCode === 200;
-            res.end(JSON.stringify({ code: 500, msg: error }));
+            res.end(JSON.stringify({ code: res.statusCode || 500, msg: error }));
         }
     }
 
     private handleResponse(res: Response) {
-        res.statusCode = 200;
-        res.statusCode
         res.end(JSON.stringify({ code: 200, data: res.body }));
     }
 }
